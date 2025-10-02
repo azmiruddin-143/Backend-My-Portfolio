@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model Blog {
+  // Primary Keys and Identifiers
+  id          String   @id @default(cuid()) // Unique ID for each blog post
+  
+  // Content Fields
+  title       String
+  slug        String   @unique // URL-এর জন্য অনন্য (Unique) ছোট নাম (যেমন: /blogs/my-first-post)
+  content     String   // HTML/Markdown content from the Rich Text Editor
+  
+  // Relationship: Blog author (One-to-Many: User to Blog)
+  authorId    Int      // Foreign key to the User model
+  author      user     @relation(fields: [authorId], references: [id])
+  
+  // Status and Metadata
+  isPublished Boolean  @default(false) // Draft বা Published স্ট্যাটাস নিয়ন্ত্রণ করবে
+  views       Int      @default(0)     // মোট ভিউ গণনা
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([authorId]) // authorId দ্বারা দ্রুত অনুসন্ধানের জন্য Indexing
+}
+
+
+model Project {
+  // Primary Keys and Identifiers
+  id          String   @id @default(cuid())
+  
+  // Content and Links
+  title       String
+  description String
+  thumbnail   String   // URL for the project thumbnail image
+  
+  // Project URLs (Optional fields)
+  projectUrl  String?  // Source Code Link (e.g., GitHub)
+  liveUrl     String?  // Live Deployment Link
+  
+  // Key Features (Stored as a list)
+  features    String[] // Array of strings (e.g., ["NextJS", "Tailwind CSS", "Prisma"])
+  
+  // Metadata
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  USER
+}
+
+enum status {
+  ACTIVE
+  INACTIVE
+  BLOCK
+}
+
+model user {
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String   @unique // Email must be unique for login
+  password    String
+  role        Role     @default(USER) // Use 'SUPER_ADMIN' for the portfolio owner
+  phone       String
+  picture     String?  // Optional profile picture URL
+  status      status   @default(ACTIVE)
+  isVerified  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationship: Linking user to the Blog model
+  blogs       Blog[]   // A list of blog posts written by this user
+}
