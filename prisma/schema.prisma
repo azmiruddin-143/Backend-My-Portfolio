@@ -15,77 +15,103 @@ datasource db {
 
 
 
-model Blog {
-  // Primary Keys and Identifiers
-  id          String   @id @default(cuid()) // Unique ID for each blog post
-  
-  // Content Fields
-  title       String
-  slug        String   @unique // URL-এর জন্য অনন্য (Unique) ছোট নাম (যেমন: /blogs/my-first-post)
-  content     String   // HTML/Markdown content from the Rich Text Editor
-  
-  // Relationship: Blog author (One-to-Many: User to Blog)
-  authorId    Int      // Foreign key to the User model
-  author      user     @relation(fields: [authorId], references: [id])
-  
-  // Status and Metadata
-  isPublished Boolean  @default(false) // Draft বা Published স্ট্যাটাস নিয়ন্ত্রণ করবে
-  views       Int      @default(0)     // মোট ভিউ গণনা
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 
-  @@index([authorId]) // authorId দ্বারা দ্রুত অনুসন্ধানের জন্য Indexing
-}
+model User{
+id Int @id @default(autoincrement())
 
-
-model Project {
-  // Primary Keys and Identifiers
-  id          String   @id @default(cuid())
-  
-  // Content and Links
-  title       String
-  description String
-  thumbnail   String   // URL for the project thumbnail image
-  
-  // Project URLs (Optional fields)
-  projectUrl  String?  // Source Code Link (e.g., GitHub)
-  liveUrl     String?  // Live Deployment Link
-  
-  // Key Features (Stored as a list)
-  features    String[] // Array of strings (e.g., ["NextJS", "Tailwind CSS", "Prisma"])
-  
-  // Metadata
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  name String
+  email String @unique
+  password String
+  role Role @default(USER)
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  blogs Blog[]
+  projects Project[]
+  resume Resume[]
 }
 
 
 
-enum Role {
-  SUPER_ADMIN
-  ADMIN
+enum Role{
   USER
+  ADMIN
 }
 
-enum status {
-  ACTIVE
-  INACTIVE
-  BLOCK
+model Blog{
+  id Int @id @default(autoincrement())
+  title String
+  content String
+  views Int @default(0)
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  authorId Int
+  author User @relation(fields: [authorId], references: [id])
+
 }
 
-model user {
-  id          Int      @id @default(autoincrement())
-  name        String
-  email       String   @unique // Email must be unique for login
-  password    String
-  role        Role     @default(USER) // Use 'SUPER_ADMIN' for the portfolio owner
-  phone       String
-  picture     String?  // Optional profile picture URL
-  status      status   @default(ACTIVE)
-  isVerified  Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  // Relationship: Linking user to the Blog model
-  blogs       Blog[]   // A list of blog posts written by this user
+
+model Project{
+  id Int @id @default(autoincrement())
+  title String
+  description String
+  features   String[]
+  thumbnail   String[]
+  clickCount  Int @default(0)
+  liveUrl     String
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  authorId Int
+  user User @relation(fields: [authorId], references: [id])
+
 }
+
+
+model Resume{
+  id Int @id @default(autoincrement())
+  fullName String
+  email String @unique
+  phone String
+  address String
+  education Json
+  experience Json
+  skills String[]
+  certifications String[]
+  languages String[]
+  projects Json
+  summary String
+  portfolioUrl String?
+  linkedinUrl String?
+  githubUrl String?
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+
+
+}
+
+model Analytics{
+  id Int @id @default(autoincrement())
+  blogViews Int @default(0)
+  resumesMade Int @default(0)
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+}
+
+
+
+
+
+model VisitorLog {
+  id        Int      @id @default(autoincrement())
+  ip        String
+  userAgent String
+  device    String
+  os        String   @default("Unknown")   
+  browser   String   @default("Unknown")
+  page      String
+  createdAt DateTime @default(now())
+}
+
+
+
