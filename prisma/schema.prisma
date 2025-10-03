@@ -14,7 +14,11 @@ datasource db {
 }
 
 
-
+enum Role{
+  USER
+  ADMIN
+}
+ 
 
 model User{
 id Int @id @default(autoincrement())
@@ -23,6 +27,7 @@ id Int @id @default(autoincrement())
   email String @unique
   password String
   role Role @default(USER)
+  phone        String
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
   blogs Blog[]
@@ -30,12 +35,6 @@ id Int @id @default(autoincrement())
   resume Resume[]
 }
 
-
-
-enum Role{
-  USER
-  ADMIN
-}
 
 model Blog{
   id Int @id @default(autoincrement())
