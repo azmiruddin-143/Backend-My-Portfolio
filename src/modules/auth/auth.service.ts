@@ -61,13 +61,14 @@ export const userLogin = async (payload: ILogin, res: Response) => {
   const token = jwt.sign(
     { userId: user.id, role: user.role },
     process.env.JWT_SECRET_KEY as string,
-    { expiresIn: process.env.JWT_EXPIRE_KEY || "10d" }
+    { expiresIn: process.env.JWT_EXPIRE_KEY || "10d"}
   );
 
 
  res.cookie("token", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production", 
+    // secure: process.env.NODE_ENV === "production", 
+    secure: process.env.NODE_ENV === "development", 
     maxAge: 30 * 24 * 60 * 60 * 1000, 
   });
 
