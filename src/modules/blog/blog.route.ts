@@ -4,9 +4,6 @@ import { authenticateJWT } from "../../middleware/auth.middleware";
 import { authorizeRoles } from "../../middleware/authRole.middleware";
 
 const blogRouter = express.Router();
-
-
-
 blogRouter.post("/", authenticateJWT, authorizeRoles("ADMIN", "USER"), createBlog);
 blogRouter.get("/",  authenticateJWT, authorizeRoles("ADMIN", "USER"),getAllBlog);
 blogRouter.get("/:id", authenticateJWT, authorizeRoles("ADMIN", "USER"), getBlogById);
