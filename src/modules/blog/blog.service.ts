@@ -1,12 +1,23 @@
 import { Blog, Prisma } from "@prisma/client"
 import { prisma } from "../../config/db"
 
-const createBlog = async (payload:Prisma.BlogCreateInput):Promise<Blog> => {
+const createBlog = async (
+    payload: { title: string, content: string, views?: number }, 
+    authorId: number
+): Promise<Blog> => {
 
+    // Prisma-তে ব্লগ তৈরি করার সময় authorId কে data অবজেক্টের মধ্যে যুক্ত করা হলো।
     const blog = await prisma.blog.create({
-        data:payload
-    })
-    return blog
+        data: {
+            // পোস্টম্যান থেকে আসা ডেটা (title, content, views)
+            ...payload, 
+            
+            // ✅ সমস্যার সমাধান: JWT থেকে আসা লেখকের ID যুক্ত করা হলো
+            authorId: authorId, 
+        }
+    });
+    
+    return blog;
 };
 
 const getAllBlogs = async ({

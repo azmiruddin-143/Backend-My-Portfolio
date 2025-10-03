@@ -1,25 +1,37 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 import catchAsync from "../../utils/catchAsync";
 import { blogService } from "./blog.service";
+interface CustomRequest extends Request {
+    user?: {
+        userId: number; // এই ডেটা JWT মিডলওয়্যার থেকে আসবে
+        role: string;
+    };
+}
 
 
+export const createBlog = catchAsync(async (req: CustomRequest, res: Response) => {
 
-export const createBlog = catchAsync(async(req:Request, res:Response) => {
+    const authorId = req.user?.userId;
 
-    const blog = await blogService.createBlog(req.body);
-    if(!blog){
-        throw new Error("Blog Not Found")
+    // 2. অথরাইজেশন চেক: যদি authorId না থাকে (মিডলওয়্যার কাজ না করলে)
+    if (!authorId) {
+        // 401 Unauthorized Response
+        return res.status(401).send({
+            success: false,
+            message: "Authorization failed: No valid token or user ID provided."
+        });
     }
 
-
+    // 3. সার্ভিস ফাংশনকে রিকোয়েস্ট বডি এবং authorId পাঠানো হলো
+    const blog = await blogService.createBlog(req.body, authorId);
+    
+    // 4. সফল Response পাঠানো হলো
     res.status(201).send({
-        success:true,
-        message:"Blog Data Created Successfully",
+        success: true,
+        message: "Blog Data Created Successfully",
         data: blog
-    })
+    });
 });
-
-
 
 
 export const getAllBlog = catchAsync(async (req: Request, res: Response) => {
