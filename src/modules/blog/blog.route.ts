@@ -5,8 +5,8 @@ import { authorizeRoles } from "../../middleware/authRole.middleware";
 
 const blogRouter = express.Router();
 blogRouter.post("/", authenticateJWT, authorizeRoles("ADMIN", "USER"), createBlog);
-blogRouter.get("/",  authenticateJWT, authorizeRoles("ADMIN", "USER"),getAllBlog);
-blogRouter.get("/:id", authenticateJWT, authorizeRoles("ADMIN", "USER"), getBlogById);
+blogRouter.get("/",getAllBlog);
+blogRouter.get("/:id", getBlogById);
 blogRouter.put("/:id",  authenticateJWT, authorizeRoles("ADMIN", "USER"),updateBlog)
 blogRouter.delete("/:id", authenticateJWT, authorizeRoles("ADMIN"), deleteBlogData );
 

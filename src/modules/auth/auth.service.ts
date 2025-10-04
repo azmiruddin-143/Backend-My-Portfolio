@@ -96,8 +96,22 @@ const allUsers = async () => {
 }
 
 
+ const userLogout = (res: Response) => {
+  
+  res.cookie("token", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "development", 
+    expires: new Date(0),
+  });
+
+  return { message: "Logout successful. Cookie cleared." };
+};
+
+
+
 export const authService = {
   userCreate,
   userLogin,
-  allUsers
+  allUsers,
+  userLogout
 };

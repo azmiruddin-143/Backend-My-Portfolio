@@ -35,7 +35,8 @@
     "express": "^5.1.0",
     "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
-    "ua-parser-js": "^2.0.5"
+    "ua-parser-js": "^2.0.5",
+    "zod": "^4.1.11"
   },
   "description": ""
 }

@@ -53,3 +53,21 @@ export const getProfile = async (req: Request, res: Response) => {
   const user = (req as any).user; 
   res.json({ success: true, user });
 };
+
+
+export const userLogoutController = (req: Request, res: Response) => { 
+    try {
+        const result = authService.userLogout(res);
+
+        res.status(200).json({
+            success: true,
+            message: result.message,
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "An error occurred during logout."
+        });
+    }
+};
