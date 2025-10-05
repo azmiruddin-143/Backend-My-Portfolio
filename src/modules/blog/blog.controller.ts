@@ -3,7 +3,7 @@ import catchAsync from "../../utils/catchAsync";
 import { blogService } from "./blog.service";
 interface CustomRequest extends Request {
     user?: {
-        userId: number; // এই ডেটা JWT মিডলওয়্যার থেকে আসবে
+        userId: number; 
         role: string;
     };
 }
@@ -13,9 +13,7 @@ export const createBlog = catchAsync(async (req: CustomRequest, res: Response) =
 
     const authorId = req.user?.userId;
 
-    // 2. অথরাইজেশন চেক: যদি authorId না থাকে (মিডলওয়্যার কাজ না করলে)
     if (!authorId) {
-        // 401 Unauthorized Response
         return res.status(401).send({
             success: false,
             message: "Authorization failed: No valid token or user ID provided."

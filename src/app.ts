@@ -6,6 +6,7 @@ import express from "express";
 import globalErrorHandler from "./utils/globalErrorHandeler";
 import { userRouter } from "./modules/auth/auth.route";
 import blogRouter from "./modules/blog/blog.route";
+import projectRoute from "./modules/project/project.route";
 // import globalErrorHandler from "./utils/globalErrorHandeler";
 // import { userRouter } from "./modules/auth/auth.route";
 // import blogRouter from "./modules/blog/blog.route";
@@ -36,7 +37,7 @@ app.use(express.json());
 app.use("/api/v1/auth", userRouter);
 app.use("/api/v1/blog",blogRouter);
 // app.use("/api/v1/resume", resumeRouter);
-// app.use("/api/v1/project", projectRoute);
+app.use("/api/v1/project", projectRoute);
 // app.use("/api/v1/dashboard", dashRoute);
 // app.use(visitorLogger)
 

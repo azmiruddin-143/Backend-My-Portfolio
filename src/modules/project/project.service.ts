@@ -3,8 +3,6 @@ import { Project } from "@prisma/client"
 import { prisma } from "../../config/db"
 import { IProjectPagination } from "./project.interface"
 
-
-
 const createProject = async (payload: {
   title: string
   description: string
@@ -103,18 +101,6 @@ const updateProjects = async (id:number, payload:any) => {
 
 
 
-const deleteProject = async (id:number) => {
-    const ProjectData = await prisma.project.delete({
-        where:{id}
-
-    });
-
-    return ProjectData
-}
-
-
-
-
 
 
 
@@ -132,7 +118,13 @@ export const getProjectByIdAndIncrement = async (id: number) => {
   return updated;
 };
 
+const deleteProject = async (id:number) => {
+    const del= await prisma.project.delete({
+        where: {id}
+    })
 
+    return deleteProject
+}
 
 
 

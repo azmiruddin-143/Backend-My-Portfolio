@@ -56,6 +56,7 @@ model Project{
   features   String[]
   thumbnail   String[]
   clickCount  Int @default(0)
+  projectUrl  String? 
   liveUrl     String
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
