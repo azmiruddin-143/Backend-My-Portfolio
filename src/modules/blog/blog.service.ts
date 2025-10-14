@@ -84,6 +84,7 @@ const getAllBlogs = async ({
       id: true,
       title: true,
       content: true,
+      image: true,
       views: true,
       createAt: true,
       updateAt: true,
@@ -112,18 +113,40 @@ const getAllBlogs = async ({
 
 
 
-const getBlogById = async (id:number) => {
-    const singleBlog = await prisma.blog.update({
-        where:{id},
-        data:{
-          views:{
-            increment:1
-          }
-        }
-    })
+// const getBlogById = async (id:number) => {
+//     const singleBlog = await prisma.blog.update({
+//         where:{id},
+//         data:{
+//           views:{
+//             increment:1
+//           }
+//         }
+//     })
 
-    return singleBlog
-}
+//     return singleBlog
+// }
+
+
+
+const getBlogById = async (id: number) => {
+  const existingBlog = await prisma.blog.findUnique({ where: { id } });
+
+  if (!existingBlog) {
+    throw new Error("Blog not found");
+  }
+
+  const updatedBlog = await prisma.blog.update({
+    where: { id },
+    data: {
+      views: { increment: 1 },
+    },
+  });
+
+  return updatedBlog;
+};
+
+
+
 
 
 

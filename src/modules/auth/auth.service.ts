@@ -2,7 +2,7 @@
 import { prisma } from "../../config/db";
 import bcrypt from "bcryptjs";
 import { ILogin } from "./auth.interface";
-import jwt, { SignOptions }  from "jsonwebtoken"
+import jwt, { SignOptions } from "jsonwebtoken"
 import { Response } from "express";
 
 
@@ -26,7 +26,7 @@ const userCreate = async (payload: any) => {
   const user = await prisma.user.create({
     data: {
       ...payload,
-      password: hashedPassword, 
+      password: hashedPassword,
     },
   });
 
@@ -40,7 +40,46 @@ const userCreate = async (payload: any) => {
 };
 
 
-  //  for using Production and HTTPS secure
+//  for using Production and HTTPS secure
+
+// export const userLogin = async (payload: ILogin, res: Response) => {
+//   const user = await prisma.user.findUnique({
+//     where: { email: payload.email },
+//   });
+
+//   if (!user) {
+//     throw new Error("User Not Found in DB");
+//   }
+
+//   const isMatchPassword = await bcrypt.compare(payload.password, user.password);
+//   if (!isMatchPassword) {
+//     throw new Error("Password Didn't Match");
+//   }
+
+//   const token = jwt.sign(
+//     { userId: user.id, role: user.role },
+//     process.env.JWT_SECRET_KEY as string,
+//     { expiresIn: process.env.JWT_EXPIRE_KEY || "10d"}
+//   );
+
+
+//  res.cookie("token", token, {
+//     httpOnly: true,
+//     // secure: process.env.NODE_ENV === "production", 
+//     secure: process.env.NODE_ENV === "development", 
+//     maxAge: 30 * 24 * 60 * 60 * 1000, 
+//   });
+
+//   return {
+//     id: user.id,
+//     name: user.name,
+//     email: user.email,
+//     role: user.role,
+//   };
+// };
+
+
+
 
 export const userLogin = async (payload: ILogin, res: Response) => {
   const user = await prisma.user.findUnique({
@@ -61,16 +100,20 @@ export const userLogin = async (payload: ILogin, res: Response) => {
   const token = jwt.sign(
     { userId: user.id, role: user.role },
     process.env.JWT_SECRET_KEY as string,
-    { expiresIn: process.env.JWT_EXPIRE_KEY || "10d"}
+    { expiresIn: (process.env.JWT_EXPIRE_KEY as string) || "10d" } as SignOptions
   );
 
 
- res.cookie("token", token, {
+  res.cookie("token", token, {
     httpOnly: true,
-    // secure: process.env.NODE_ENV === "production", 
-    secure: process.env.NODE_ENV === "development", 
-    maxAge: 30 * 24 * 60 * 60 * 1000, 
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 30 * 24 * 60 * 60 * 1000,
   });
+
+
+
+
 
   return {
     id: user.id,
@@ -82,25 +125,40 @@ export const userLogin = async (payload: ILogin, res: Response) => {
 
 
 
+
+
+
+
+
+
 const allUsers = async () => {
   const user = await prisma.user.findMany();
-
-  if(!user){
+  if (!user) {
     throw new Error("User Not Found")
   }
 
   return user
-
-
-
 }
 
 
- const userLogout = (res: Response) => {
-  
+
+
+
+
+const deleteUser = async (id: number) => {
+  const del = await prisma.user.delete({
+    where: { id }
+  })
+
+  return deleteUser
+}
+
+
+const userLogout = (res: Response) => {
+
   res.cookie("token", "", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "development", 
+    secure: process.env.NODE_ENV === "development",
     expires: new Date(0),
   });
 
@@ -109,9 +167,23 @@ const allUsers = async () => {
 
 
 
+const updateUser = async (id: number, data: any) => {
+  const blog = await prisma.user.update({
+    where: {
+      id: id
+    },
+    data: data
+  })
+
+  return blog
+}
+
+
 export const authService = {
   userCreate,
   userLogin,
   allUsers,
-  userLogout
+  userLogout,
+  deleteUser,
+  updateUser
 };

@@ -5,13 +5,13 @@ import { authorizeRoles } from "../../middleware/authRole.middleware";
 
 const projectRoute = express.Router();
 
-projectRoute.post("/", authenticateJWT, authorizeRoles("ADMIN", "USER"),createProject );
+projectRoute.post("/", createProject );
 
 projectRoute.get("/", getAllProjects);
 
-projectRoute.get("/:id", authenticateJWT, authorizeRoles("USER", "ADMIN"), getProjectById);
-projectRoute.put("/:id", authenticateJWT, authorizeRoles("USER", "ADMIN"), updateProject);
-projectRoute.delete("/:id", authenticateJWT, authorizeRoles("ADMIN"), deleteProject );
+projectRoute.get("/:id", getProjectById);
+projectRoute.put("/:id", updateProject);
+projectRoute.delete("/:id", deleteProject );
 
 // ---------- top views project and top click project ------------------
 

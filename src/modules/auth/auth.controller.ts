@@ -22,17 +22,14 @@ export const registerUser = catchAsync(async (req: Request, res:Response) => {
 
 
 export const loginUser = catchAsync(async(req: Request, res:Response) => {
-  
-    const user = await authService.userLogin(req.body, res);
 
+    const user = await authService.userLogin(req.body, res);
     res.status(200).send({
         success:true,
         message:"User Login Successfully",
        user,
         
     })
-    
-
 });
 
 
@@ -44,6 +41,19 @@ export const totalUsers = catchAsync(async (req:Request, res:Response) => {
         sucess:true,
         message:"All User Retrived Successfully!",
         data:user
+    })
+});
+
+
+export const deleteUserData = catchAsync(async(req:Request, res:Response) => {
+
+    const singleBlog = await authService.deleteUser(Number(req.params.id))
+
+
+    res.status(201).send({
+        success:true,
+        message:"Single User Deleted Successfully ",
+        data:singleBlog
     })
 });
 
@@ -71,3 +81,17 @@ export const userLogoutController = (req: Request, res: Response) => {
         });
     }
 };
+
+
+
+export const updateUser = catchAsync(async(req:Request, res:Response) => {
+
+    const singleBlog = await authService.updateUser(Number(req.params.id), req.body)
+
+
+    res.status(201).send({
+        success:true,
+        message:"Single User Updated Successfully ",
+        data:singleBlog
+    })
+});

@@ -9,6 +9,7 @@ const createProject = async (payload: {
   features: string[]
   thumbnail: string[]
   liveUrl: string
+  projectUrl: string
   authorId: number
 }): Promise<Project> => {
   return await prisma.project.create({
@@ -18,6 +19,7 @@ const createProject = async (payload: {
       features: payload.features,
       thumbnail: payload.thumbnail,
       liveUrl: payload.liveUrl,
+      projectUrl:payload.projectUrl,
       user: {
         connect: { id: payload.authorId }
       }

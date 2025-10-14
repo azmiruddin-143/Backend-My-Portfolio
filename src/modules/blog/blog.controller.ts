@@ -10,15 +10,15 @@ interface CustomRequest extends Request {
 
 
 export const createBlog = catchAsync(async (req: CustomRequest, res: Response) => {
+const authorId = 3;
+    // const authorId = req.user?.userId;
 
-    const authorId = req.user?.userId;
-
-    if (!authorId) {
-        return res.status(401).send({
-            success: false,
-            message: "Authorization failed: No valid token or user ID provided."
-        });
-    }
+    // if (!authorId) {
+    //     return res.status(401).send({
+    //         success: false,
+    //         message: "Authorization failed: No valid token or user ID provided."
+    //     });
+    // }
 
     // 3. সার্ভিস ফাংশনকে রিকোয়েস্ট বডি এবং authorId পাঠানো হলো
     const blog = await blogService.createBlog(req.body, authorId);
@@ -37,7 +37,7 @@ export const getAllBlog = catchAsync(async (req: Request, res: Response) => {
 
   const result = await blogService.getAllBlogs({
     page: Number(page) || 1,
-    limit: Number(limit) || 10,
+    limit: Number(limit) || 50,
     search: search as string,
     authorId: authorId ? Number(authorId) : undefined,
     minViews: minViews ? Number(minViews) : undefined,
@@ -57,21 +57,24 @@ export const getAllBlog = catchAsync(async (req: Request, res: Response) => {
 
 
 
+export const getBlogById = catchAsync(async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
 
+  if (!id) {
+    throw new Error("Blog ID is missing or invalid.");
+  }
 
+  const singleBlog = await blogService.getBlogById(id);
 
-
-export const getBlogById = catchAsync(async(req:Request, res:Response) => {
-
-    const singleBlog = await blogService.getBlogById(Number(req.params.id))
-
-
-    res.status(201).send({
-        success:true,
-        message:"Single Blog Retrived Successfully ",
-        data:singleBlog
-    })
+  res.status(200).send({
+    success: true,
+    message: "Single Blog Retrieved Successfully",
+    data: singleBlog,
+  });
 });
+
+
+
 
 export const deleteBlogData = catchAsync(async(req:Request, res:Response) => {
 

@@ -4,10 +4,11 @@ import { authenticateJWT } from "../../middleware/auth.middleware";
 import { authorizeRoles } from "../../middleware/authRole.middleware";
 
 const blogRouter = express.Router();
-blogRouter.post("/", authenticateJWT, authorizeRoles("ADMIN", "USER"), createBlog);
+blogRouter.post("/", createBlog);
 blogRouter.get("/",getAllBlog);
 blogRouter.get("/:id", getBlogById);
-blogRouter.put("/:id",  authenticateJWT, authorizeRoles("ADMIN", "USER"),updateBlog)
-blogRouter.delete("/:id", authenticateJWT, authorizeRoles("ADMIN"), deleteBlogData );
+blogRouter.put("/:id", updateBlog)
+blogRouter.delete("/:id", deleteBlogData );
+// blogRouter.delete("/:id", authenticateJWT, authorizeRoles("ADMIN"), deleteBlogData );
 
 export default blogRouter;

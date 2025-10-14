@@ -22,15 +22,14 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3000", 
+    // origin: "http://localhost:3000", 
+    origin: "https://myportfolio-dusky-eight.vercel.app", 
     credentials: true,               
   })
 );
 app.use(cookieParser())
 app.use(compression());
 app.use(express.json());
-
-
 
 
 // user auth Route 
