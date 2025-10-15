@@ -11,13 +11,6 @@ const globalErrorHandeler_1 = __importDefault(require("./utils/globalErrorHandel
 const auth_route_1 = require("./modules/auth/auth.route");
 const blog_route_1 = __importDefault(require("./modules/blog/blog.route"));
 const project_route_1 = __importDefault(require("./modules/project/project.route"));
-// import globalErrorHandler from "./utils/globalErrorHandeler";
-// import { userRouter } from "./modules/auth/auth.route";
-// import blogRouter from "./modules/blog/blog.route";
-// import resumeRouter from "./modules/resume/resume.route";
-// import projectRoute from "./modules/project/project.route";
-// import dashRoute from "./modules/dashboard/dashboard.route";
-// import { visitorLogger } from "./middleware/visitorLogger.middleware";
 const app = (0, express_1.default)();
 // app.use(cors({ origin: "*" }));   
 app.use((0, cors_1.default)({

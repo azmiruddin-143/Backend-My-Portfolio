@@ -7,13 +7,7 @@ import globalErrorHandler from "./utils/globalErrorHandeler";
 import { userRouter } from "./modules/auth/auth.route";
 import blogRouter from "./modules/blog/blog.route";
 import projectRoute from "./modules/project/project.route";
-// import globalErrorHandler from "./utils/globalErrorHandeler";
-// import { userRouter } from "./modules/auth/auth.route";
-// import blogRouter from "./modules/blog/blog.route";
-// import resumeRouter from "./modules/resume/resume.route";
-// import projectRoute from "./modules/project/project.route";
-// import dashRoute from "./modules/dashboard/dashboard.route";
-// import { visitorLogger } from "./middleware/visitorLogger.middleware";
+
 
 
 const app = express();
